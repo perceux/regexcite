@@ -1,0 +1,27 @@
+.result {
+	word-wrap: break-word;
+	border: 0px solid black;
+	width: 100%;
+	height: 100%;
+	margin: 0px;
+	padding: 0px;
+}
+.result * span, .result * * span, span.hl {
+	background-color: #DBFF00;
+	word-wrap: break-word;
+	min-width: 2px;
+	min-height: 10px;
+}
+textarea {
+	word-wrap: break-word;
+	overflow: visible;
+}
+.error {
+	color: red;
+	background-image: url(images/error.gif);
+	background-repeat: no-repeat;
+	padding-left: 50px;
+}
+.smallcar * {
+	font-size: xx-small;
+}
