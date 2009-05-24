@@ -7,7 +7,6 @@ import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.KeyboardListenerAdapter;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.ToggleButton;
 
@@ -89,9 +88,9 @@ public class ReplacePanel extends DockPanel {
 			}
 		};
 
-		KeyboardListenerAdapter CRListener = new CarriageReturnListenerAdapter(executeCommand);
-		regexpTextBox.addKeyboardListener(CRListener);
-		replaceTextBox.addKeyboardListener(CRListener);
+		EnterPressHandler enterPressHandler = new EnterPressHandler(executeCommand);
+		regexpTextBox.addKeyPressHandler(enterPressHandler);
+		replaceTextBox.addKeyPressHandler(enterPressHandler);
 
 		regexpTextBox.setWidth("100%");
 		final Timer autoSearchTimer = new Timer() {

@@ -1,15 +1,15 @@
 package org.dreamsoft.regexcite.client.ui;
 
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalSplitPanel;
-import com.google.gwt.user.client.ui.KeyboardListenerAdapter;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
-import com.google.gwt.user.client.ui.TreeListener;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class AnalysePanel extends VerticalPanel {
@@ -85,19 +85,16 @@ public class AnalysePanel extends VerticalPanel {
 			spanel2.setWidget(regexpTree);
 			spanel2.setWidth("100%");
 
-			KeyboardListenerAdapter CRListener = new CarriageReturnListenerAdapter(executeCommand);
-			regexpTextBox.addKeyboardListener(CRListener);
+			EnterPressHandler enterPressHandler = new EnterPressHandler(executeCommand);
+			regexpTextBox.addKeyPressHandler(enterPressHandler);
 
 			HorizontalSplitPanel hspanel = new HorizontalSplitPanel();
 			hspanel.setRightWidget(spanel);
 			hspanel.setLeftWidget(spanel2);
 
-			regexpTree.addTreeListener(new TreeListener() {
-				public void onTreeItemSelected(TreeItem item) {
-					detailItem(item);
-				}
-
-				public void onTreeItemStateChanged(TreeItem item) {
+			regexpTree.addSelectionHandler(new SelectionHandler<TreeItem>() {
+				public void onSelection(SelectionEvent<TreeItem> event) {
+					detailItem(event.getSelectedItem());
 				}
 			});
 
@@ -145,26 +142,26 @@ public class AnalysePanel extends VerticalPanel {
 	}
 
 	public native TreeItem parse(TreeItem treeItem, String re)/*-{
-				var buildTree = function(node, parentNode) {
-					if(node != null){
-						var nodeName = ((node.value==null)?node.nodeName:node.value);
-						var tmpNode = parentNode.@com.google.gwt.user.client.ui.TreeItem::addItem(Ljava/lang/String;)(nodeName);
-						for(var i in node.children){
-							buildTree(node.children[i], tmpNode);
-						}
-						tmpNode.@com.google.gwt.user.client.ui.TreeItem::setState(Z)(true);
-						if (undefined != node.startIndex) {
-							var tmpObj = @org.dreamsoft.regexcite.client.ui.AnalysePanel::createNodeInfo(IILjava/lang/String;Z)(node.startIndex,node.endIndex,node.nodeName,node.combineable);
-							tmpNode.@com.google.gwt.user.client.ui.TreeItem::setUserObject(Ljava/lang/Object;)(tmpObj);
-						}
-					}
+		var buildTree = function(node, parentNode) {
+			if(node != null){
+				var nodeName = ((node.value==null)?node.nodeName:node.value);
+				var tmpNode = parentNode.@com.google.gwt.user.client.ui.TreeItem::addItem(Ljava/lang/String;)(nodeName);
+				for(var i in node.children){
+					buildTree(node.children[i], tmpNode);
 				}
-				var state = $wnd.PatternJS.parse(re);
-				var v = state.getAST();
-				buildTree(v, treeItem);
+				tmpNode.@com.google.gwt.user.client.ui.TreeItem::setState(Z)(true);
+				if (undefined != node.startIndex) {
+					var tmpObj = @org.dreamsoft.regexcite.client.ui.AnalysePanel::createNodeInfo(IILjava/lang/String;Z)(node.startIndex,node.endIndex,node.nodeName,node.combineable);
+					tmpNode.@com.google.gwt.user.client.ui.TreeItem::setUserObject(Ljava/lang/Object;)(tmpObj);
+				}
+			}
+		}
+		var state = $wnd.PatternJS.parse(re);
+		var v = state.getAST();
+		buildTree(v, treeItem);
 
-				return treeItem;
-				}-*/;
+		return treeItem;
+	}-*/;
 
 	public void initTest() {
 		regexpTextBox.setText("([ae]+)|([lc]+)|\\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}\\b");
