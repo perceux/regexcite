@@ -3,10 +3,10 @@ package org.dreamsoft.regexcite.client.ui;
 import org.dreamsoft.regexcite.client.util.regex.Pattern;
 
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.KeyboardListenerAdapter;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.ToggleButton;
@@ -101,9 +101,9 @@ public class SearchPanel extends DockPanel {
 				}
 			};
 
-			KeyboardListenerAdapter CRListener = new CarriageReturnListenerAdapter(executeCommand);
-			regexpTextBox.addKeyboardListener(CRListener);
-			replaceTextBox.addKeyboardListener(CRListener);
+			EnterPressHandler enterPressHandler = new EnterPressHandler(executeCommand);
+			regexpTextBox.addKeyPressHandler(enterPressHandler);
+			replaceTextBox.addKeyPressHandler(enterPressHandler);
 
 			regexpTextBox.setWidth("100%");
 
@@ -135,9 +135,13 @@ public class SearchPanel extends DockPanel {
 
 			autoSearchTimer.scheduleRepeating(1000);
 		}
-		
+
 		// FIXME Why the split position change when help tab is selected?
-		vspanel.setSplitPosition("200px");
+		DeferredCommand.addCommand(new Command() {
+			public void execute() {
+				vspanel.setSplitPosition("50%");
+			}
+		});
 
 	}
 
